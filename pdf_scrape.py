@@ -32,6 +32,3 @@ def convert_pdf_to_txt(path, page_nos=None):
     device.close()
     retstr.close()
     return text
-
- 
-print(convert_pdf_to_txt(nc_file, nc_page_nos))

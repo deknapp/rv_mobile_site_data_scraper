@@ -15,6 +15,22 @@ def split_text_by_place(txt):
     current_lst.append(line)  
   return pg_lst
 
+def amenities(pg_lst):
+  lst = []
+  for amen in rv_property.AMENITIES_LIST:
+    if amen in pg_lst:
+      lst.append(amen)
+  return lst.join(' ') 
+
+def val_from_previous(pg_lst, key):
+  i = 0
+  for item in pg_lst:
+    if item == key:
+      return pg_lst[i+1] 
+    i=i+1
+  print("ERROR: cannot find key " + key + "in list")
+  exit() 
+
 def property_from_page(pg_lst):
   name = pg_lst[5]
   address = pg_lst[6]
@@ -33,11 +49,11 @@ def property_from_page(pg_lst):
   jlt_notes = pg_lst[15] + pg_lst[16]
 
   number_of_units = pg_lst[0]
-  amenitites = pg_lst[0]
+  amenities = amenities(pg_lst)
   utilities = pg_lst[0]
 
-  market_rent = pg_list[-12]
-  adjusted_rent = pg_lst[-9]
+  market_rent = val_from_previous('Market Rent') 
+  adjusted_rent = val_from_previous('Adjusted Rent')
   
   return rv_property.Property(name, address, ity, state, zp, phone, email, age_range, ownership, jlt_notes, number_of_units, amenities, utilities, market_rent, adjusted_rent)
 

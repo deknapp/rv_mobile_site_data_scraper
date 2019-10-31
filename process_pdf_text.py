@@ -22,17 +22,43 @@ def amenities(pg_lst):
       lst.append(amen)
   return lst.join(' ') 
 
-def utilities(pg_lst):
-    
+def index_from_key(pg_lst, key):
+  val = pg_lst[0]
+  i = 0
+  while val != key:
+    i += 1         
+    val = key[i]
+  return i
 
 def val_from_previous(pg_lst, key):
   i = 0
   for item in pg_lst:
-    if item == key:
+    if key in item:
       return pg_lst[i+1] 
     i=i+1
   print("ERROR: cannot find key " + key + "in list")
   exit() 
+
+def yn_to_bool(val):
+  if val == 'Yes':
+    return True
+  elif val == 'No':
+    return False
+  else:
+    print("ERROR: invalid Yes/No")
+  exit()
+
+def util_from_index(pg_lst, base_i):
+  return rv_property.Utility(pg_lst[base_i], pg_lst[base_i+7], pg_lst[base_i+14])
+
+def utilities(pg_lst):
+  first_yes_no_index = min(index_from_key(pg_lst, 'Yes'), index_from_key(pg_lst, 'No'))
+  water = util_from_index(pg_lst, first_yes_no_index)
+  sewer = util_from_index(pg_lst, first_yes_no_index+1)
+  trash = util_from_index(pg_lst, first_yes_no_index+2)
+  cable = util_from_index(pg_lst, first_yes_no_index+3)
+  lawn = util_from_index(pg_lst, first_yes_no_index+4)
+  return Utilities(water, sewer, trash, cable, lawn)
 
 def property_from_page(pg_lst):
   name = pg_lst[5]
@@ -53,7 +79,7 @@ def property_from_page(pg_lst):
 
   number_of_units = pg_lst[0]
   amenities = amenities(pg_lst)
-  utilities = pg_lst[0]
+  utilities = utilities(pg_lst)
 
   market_rent = val_from_previous('Market Rent') 
   adjusted_rent = val_from_previous('Adjusted Rent')

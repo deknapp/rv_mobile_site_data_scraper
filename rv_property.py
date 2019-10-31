@@ -16,8 +16,8 @@ class Utilities:
     self.lawn = lawn 
 
 class Property:
-  def __init__(name, address, city, state, zip_code, phone_number, email,
-    age_range, ownership, jlt_notes, number_of_units, amenities, utilities, market_rent, adjusted_rent):
+  def __init__(self, name, address, city, state, zip_code, phone_number, email,
+    age_range, ownership, jlt_notes, number_of_units, amenities, utilities, rents):
     self.name = name
     self.address = address
     self.city = city
@@ -31,6 +31,5 @@ class Property:
     self.number_of_units = number_of_units
     self.amenities = amenities
     self.utilities = utilities
-    self.market_rent = market_rent
-    self.adjusted_rent = adjusted_rent
+    self.rents = rents
     

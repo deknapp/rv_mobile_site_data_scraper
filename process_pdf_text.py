@@ -25,9 +25,14 @@ def amenities(pg_lst):
 def index_from_key(pg_lst, key):
   val = pg_lst[0]
   i = 0
-  while val != key:
+  while key not in val:
     i += 1         
+    if i > len(pg_lst) - 1:
+      print("ERROR: key not found: " + key)
+      print(pg_lst)
+      exit()
     val = pg_lst[i]
+  
   return i
 
 def val_from_previous(pg_lst, key):
@@ -63,11 +68,17 @@ def utilities(pg_lst):
 def property_from_page(pg_lst):
   name = pg_lst[5]
   address = pg_lst[6]
-  
-  city_state_zip = pg_lst[7].split()
-  city = city_state_zip[0] 
-  state = city_state_zip[1]
-  zp = city_state_zip[2]
+ 
+  csz_index = index_from_key(pg_lst, 'Community Information') + 3 
+  city_state_zip = pg_lst[csz_index].split()
+  if len(city_state_zip) < 3:
+    print("ERROR: city state zip is incorrect : " + pg_lst[7])
+    print(pg_lst)
+    exit()
+  else:
+    city = city_state_zip[0] 
+    state = city_state_zip[1]
+    zp = city_state_zip[2]
   
   phone = pg_lst[8]
   age_range = pg_lst[10]
@@ -83,8 +94,9 @@ def property_from_page(pg_lst):
 
   market_rent = val_from_previous(pg_lst, 'Market Rent') 
   adjusted_rent = val_from_previous(pg_lst, 'Adjusted Rent')
-  
-  return rv_property.Property(name, address, city, state, zp, phone, email, age_range, ownership, jlt_notes, number_of_units, amens, utils, market_rent, adjusted_rent)
+  rents = [[market_rent, adjusted_rent]] 
+ 
+  return rv_property.Property(name, address, city, state, zp, phone, email, age_range, ownership, jlt_notes, number_of_units, amens, utils, rents)
 
 def property_lst(txt):
   pg_lst = split_text_by_place(txt)

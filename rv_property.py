@@ -1,6 +1,19 @@
 AMENITIES_LIST = ['Basketball', 'Play Field', 'Laundry Room', 'Store', 'Clubhouse', 'Playground', 'Exercise Equipment', 'Soccer Field', 'Swimming Pool', 'Community Room', 
                   'Convenience Store', 'Park', 'Fishing Pond', 'Gated Community']
 
+class Utility:
+  def __init(included_in_rent, value, description):
+    self.included_in_rent = included_in_rent
+    self.value = value
+    self.description = description
+
+class Utilities:
+  def __init__(water, sewer, trash, cable, lawn):
+    self.water = water
+    self.sewer = sewer
+    self.trash = trash
+    self.cable = cable
+    self.lawn = lawn 
 
 class Property:
   def __init__(name, address, city, state, zip_code, phone_number, email,

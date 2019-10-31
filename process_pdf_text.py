@@ -22,6 +22,9 @@ def amenities(pg_lst):
       lst.append(amen)
   return lst.join(' ') 
 
+def utilities(pg_lst):
+    
+
 def val_from_previous(pg_lst, key):
   i = 0
   for item in pg_lst:

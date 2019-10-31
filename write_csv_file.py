@@ -7,10 +7,10 @@ def rent_string(rent_lst):
   for rent in rent_lst:
     strng = rent.description + " " + rent.market + " " + rent.adjusted
     cell_lst.append(strng)
-  return cell_lst.join(",")
+  return ",".join(cell_lst)
  
 def amen_string(amens):
-  return amens.join(",")
+  return ",".join(amens)
 
 def util_string(name, util):
   return name + " " + util.value + " " + description
@@ -22,7 +22,7 @@ def util_strings(utils):
   util_list.append(util_string("Trash", utils.trash))
   util_list.append(util_string("Cable", utils.cable))
   util_list.append(util_string("Lawn", utils.cable))
-  return util_list.join(",")
+  return ",".join(amens)
 
 def write_property(handle, prop):
   line_lst = []
@@ -39,12 +39,12 @@ def write_property(handle, prop):
   line_lst.append(amen_string(prop.amenities))
   line_lst.append(utils_string(prop.utilities))
   line_lst.append(rent_string(prop.rents))
-  line = line_lst.join(',') + '\n'
+  line = ','.join(line_lst) + '\n'
   handle.write(line)
 
 def write_property_csv(csv_name, property_lst):
   handle = open(csv_name, 'w')
-  header_line = HEADER.join(' ')
+  header_line = ' '.join(HEADER)
   handle.write(header_line)
   for prop in property_list:
     write_property(handle, prop)  

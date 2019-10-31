@@ -20,14 +20,14 @@ def amenities(pg_lst):
   for amen in rv_property.AMENITIES_LIST:
     if amen in pg_lst:
       lst.append(amen)
-  return lst.join(' ') 
+  return ' '.join(lst) 
 
 def index_from_key(pg_lst, key):
   val = pg_lst[0]
   i = 0
   while val != key:
     i += 1         
-    val = key[i]
+    val = pg_lst[i]
   return i
 
 def val_from_previous(pg_lst, key):
@@ -58,7 +58,7 @@ def utilities(pg_lst):
   trash = util_from_index(pg_lst, first_yes_no_index+2)
   cable = util_from_index(pg_lst, first_yes_no_index+3)
   lawn = util_from_index(pg_lst, first_yes_no_index+4)
-  return Utilities(water, sewer, trash, cable, lawn)
+  return rv_property.Utilities(water, sewer, trash, cable, lawn)
 
 def property_from_page(pg_lst):
   name = pg_lst[5]
@@ -69,7 +69,7 @@ def property_from_page(pg_lst):
   state = city_state_zip[1]
   zp = city_state_zip[2]
   
-  phone = pg_lsts[8]
+  phone = pg_lst[8]
   age_range = pg_lst[10]
   
   email = pg_lst[0]
@@ -78,13 +78,13 @@ def property_from_page(pg_lst):
   jlt_notes = pg_lst[15] + pg_lst[16]
 
   number_of_units = pg_lst[0]
-  amenities = amenities(pg_lst)
-  utilities = utilities(pg_lst)
+  amens = amenities(pg_lst)
+  utils = utilities(pg_lst)
 
-  market_rent = val_from_previous('Market Rent') 
-  adjusted_rent = val_from_previous('Adjusted Rent')
+  market_rent = val_from_previous(pg_lst, 'Market Rent') 
+  adjusted_rent = val_from_previous(pg_lst, 'Adjusted Rent')
   
-  return rv_property.Property(name, address, ity, state, zp, phone, email, age_range, ownership, jlt_notes, number_of_units, amenities, utilities, market_rent, adjusted_rent)
+  return rv_property.Property(name, address, city, state, zp, phone, email, age_range, ownership, jlt_notes, number_of_units, amens, utils, market_rent, adjusted_rent)
 
 def property_lst(txt):
   pg_lst = split_text_by_place(txt)
@@ -93,4 +93,3 @@ def property_lst(txt):
     prop_lst.append(property_from_page(pg))
   return prop_lst
 
-process_text(nc_test_text)

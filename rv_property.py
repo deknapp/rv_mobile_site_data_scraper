@@ -2,13 +2,13 @@ AMENITIES_LIST = ['Basketball', 'Play Field', 'Laundry Room', 'Store', 'Clubhous
                   'Convenience Store', 'Park', 'Fishing Pond', 'Gated Community']
 
 class Utility:
-  def __init(included_in_rent, value, description):
+  def __init__(self, included_in_rent, value, description):
     self.included_in_rent = included_in_rent
     self.value = value
     self.description = description
 
 class Utilities:
-  def __init__(water, sewer, trash, cable, lawn):
+  def __init__(self, water, sewer, trash, cable, lawn):
     self.water = water
     self.sewer = sewer
     self.trash = trash

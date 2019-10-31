@@ -86,8 +86,11 @@ def property_from_page(pg_lst):
   
   return rv_property.Property(name, address, ity, state, zp, phone, email, age_range, ownership, jlt_notes, number_of_units, amenities, utilities, market_rent, adjusted_rent)
 
-def process_text(txt):
+def property_lst(txt):
   pg_lst = split_text_by_place(txt)
-  print(pg_lst[0])
+  prop_lst = []
+  for pg in pg_lst:
+    prop_lst.append(property_from_page(pg))
+  return prop_lst
 
 process_text(nc_test_text)

@@ -1,7 +1,7 @@
 import rv_property
 import os
 
-HEADER = ['Property Name', 'Property Address', 'Property City', 'Property State','Property Zip', 'Phone Number', 'Email', 'All Age / 55+', 'Ownership / Management', 'JLT Notes', 'Number of Units', 'Amenities', 'Utilities (Incl, Val, Des)', 'Rents (mkt, adj)']
+HEADER = ['Property Name', 'Property Address', 'Property City', 'Property State','Property Zip', 'Phone Number', 'Email', 'All Age / 55+', 'Ownership / Management', 'JLT Notes', 'Number of Units', 'Amenities', 'Utilities (Incl Val Des)', 'Rents (mkt adj)']
 
 DELIMITER = ','
 

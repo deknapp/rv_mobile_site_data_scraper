@@ -30,7 +30,6 @@ def index_from_key(pg_lst, key):
     if i > len(pg_lst) - 1:
       print("ERROR: key not found: " + key)
     val = pg_lst[i]
-  
   return i
 
 def val_from_previous(pg_lst, key, distance=1):
@@ -50,15 +49,15 @@ def yn_to_bool(val):
     print("ERROR: invalid Yes/No")
 
 def util_from_index(pg_lst, base_i):
-  return rv_property.Utility(pg_lst[base_i], pg_lst[base_i+7], pg_lst[base_i+14])
+  return rv_property.Utility(pg_lst[base_i], pg_lst[base_i+8], pg_lst[base_i+16])
 
-def utilities(pg_lst):
-  first_yes_no_index = min(index_from_key(pg_lst, 'Yes'), index_from_key(pg_lst, 'No'))
-  water = util_from_index(pg_lst, first_yes_no_index)
-  sewer = util_from_index(pg_lst, first_yes_no_index+1)
-  trash = util_from_index(pg_lst, first_yes_no_index+2)
-  cable = util_from_index(pg_lst, first_yes_no_index+3)
-  lawn = util_from_index(pg_lst, first_yes_no_index+4)
+def utilities(pg_lst): 
+  base_index = index_from_key(pg_lst, 'Service')
+  water = util_from_index(pg_lst, base_index+1)
+  sewer = util_from_index(pg_lst, base_index+2)
+  trash = util_from_index(pg_lst, base_index+3)
+  cable = util_from_index(pg_lst, base_index+4)
+  lawn = util_from_index(pg_lst, base_index+5)
   return rv_property.Utilities(water, sewer, trash, cable, lawn)
 
 def property_from_page(pg_lst):
@@ -92,8 +91,11 @@ def property_from_page(pg_lst):
 
   jlt_notes = pg_lst[15] + pg_lst[16]
 
-  # TODO
-  number_of_units = ''
+  try:
+    number_of_units = val_from_previous(pg_lst, 'Multiple Section', distance=7)
+  except:
+    number_of_units = ''
+    print("number of units failed for " + name)
 
   try:
     amens = amenities(pg_lst)
@@ -128,7 +130,8 @@ def property_lst(txt):
   prop_lst = []
   #for pg in pg_lst:
    # prop_lst.append(property_from_page(pg))
-#  print(pg_lst[0])
+  for val in pg_lst[0]:
+    print(val)
   prop_lst.append(property_from_page(pg_lst[0]))
   return prop_lst
 

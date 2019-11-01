@@ -13,8 +13,6 @@ def split_text_by_place(txt):
       pg_lst.append(current_lst)
       current_lst = []
     current_lst.append(line)  
-  print(pg_lst[0])
-#  exit()
   return pg_lst
 
 def amenities(pg_lst):
@@ -35,11 +33,11 @@ def index_from_key(pg_lst, key):
   
   return i
 
-def val_from_previous(pg_lst, key):
+def val_from_previous(pg_lst, key, distance=1):
   i = 0
   for item in pg_lst:
-    if key in item:
-      return pg_lst[i+1] 
+    if key == item:
+      return pg_lst[i+distance] 
     i=i+1
   print("ERROR: cannot find key " + key + "in list")
 
@@ -109,13 +107,13 @@ def property_from_page(pg_lst):
     print("utils failed for " + name) 
 
   try:
-    market_rent = val_from_previous(pg_lst, 'Market rv_property.Rent') 
+    market_rent = val_from_previous(pg_lst, 'Market Rent') 
   except:
     market_rent = ''
     print("market rent failed for " + name) 
 
   try:
-    adjusted_rent = val_from_previous(pg_lst, 'Adjusted rv_property.Rent', i=2)
+    adjusted_rent = val_from_previous(pg_lst, 'Adjusted', distance=2)
   except:
     adjusted_rent = ''
     print("market rent failed for " + name) 
@@ -130,6 +128,7 @@ def property_lst(txt):
   prop_lst = []
   #for pg in pg_lst:
    # prop_lst.append(property_from_page(pg))
+#  print(pg_lst[0])
   prop_lst.append(property_from_page(pg_lst[0]))
   return prop_lst
 

@@ -29,8 +29,6 @@ def index_from_key(pg_lst, key):
     i += 1         
     if i > len(pg_lst) - 1:
       print("ERROR: key not found: " + key)
-      print(pg_lst)
-      exit()
     val = pg_lst[i]
   
   return i
@@ -42,7 +40,6 @@ def val_from_previous(pg_lst, key):
       return pg_lst[i+1] 
     i=i+1
   print("ERROR: cannot find key " + key + "in list")
-  exit() 
 
 def yn_to_bool(val):
   if val == 'Yes':
@@ -51,7 +48,6 @@ def yn_to_bool(val):
     return False
   else:
     print("ERROR: invalid Yes/No")
-  exit()
 
 def util_from_index(pg_lst, base_i):
   return rv_property.Utility(pg_lst[base_i], pg_lst[base_i+7], pg_lst[base_i+14])
@@ -68,13 +64,20 @@ def utilities(pg_lst):
 def property_from_page(pg_lst):
   name = pg_lst[5]
   address = pg_lst[6]
- 
-  csz_index = index_from_key(pg_lst, 'Community Information') + 3 
+
+  csz_index = 0 
+  try:
+    csz_index = index_from_key(pg_lst, 'Community Information') + 3 
+  except:
+    pass
+  
   city_state_zip = pg_lst[csz_index].split()
+  
   if len(city_state_zip) < 3:
-    print("ERROR: city state zip is incorrect : " + pg_lst[7])
-    print(pg_lst)
-    exit()
+    print("city state zip failed for : " + name)
+    city = ''
+    state = ''
+    zp = ''
   else:
     city = city_state_zip[0] 
     state = city_state_zip[1]
@@ -89,17 +92,39 @@ def property_from_page(pg_lst):
   jlt_notes = pg_lst[15] + pg_lst[16]
 
   number_of_units = pg_lst[0]
-  amens = amenities(pg_lst)
-  utils = utilities(pg_lst)
 
-  market_rent = val_from_previous(pg_lst, 'Market Rent') 
-  adjusted_rent = val_from_previous(pg_lst, 'Adjusted Rent')
-  rents = [[market_rent, adjusted_rent]] 
+  try:
+    amens = amenities(pg_lst)
+  except:
+    print("amenities failed for " + name)
+
+  try:
+    utils = utilities(pg_lst)
+  except:
+    utils = ''
+    print("utils failed for " + name) 
+
+  try:
+    market_rent = val_from_previous(pg_lst, 'Market rv_property.Rent') 
+  except:
+    market_rent = ''
+    print("market rent failed for " + name) 
+
+  try:
+    adjusted_rent = val_from_previous(pg_lst, 'Adjusted rv_property.Rent', i=2)
+  except:
+    adjusted_rent = ''
+    print("market rent failed for " + name) 
+
+  # TODO: make this work for rents more generally 
+  rents = [rv_property.Rent(market_rent, adjusted_rent, '')] 
  
   return rv_property.Property(name, address, city, state, zp, phone, email, age_range, ownership, jlt_notes, number_of_units, amens, utils, rents)
 
 def property_lst(txt):
   pg_lst = split_text_by_place(txt)
+#  print(pg_lst[0])
+#  exit()
   prop_lst = []
   for pg in pg_lst:
     prop_lst.append(property_from_page(pg))

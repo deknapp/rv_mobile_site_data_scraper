@@ -1,6 +1,12 @@
 AMENITIES_LIST = ['Basketball', 'Play Field', 'Laundry Room', 'Store', 'Clubhouse', 'Playground', 'Exercise Equipment', 'Soccer Field', 'Swimming Pool', 'Community Room', 
                   'Convenience Store', 'Park', 'Fishing Pond', 'Gated Community']
 
+class Rent:
+  def __init__(self, adjusted, market, description):
+    self.adjusted = adjusted
+    self.market = market
+    self.description = description
+
 class Utility:
   def __init__(self, included_in_rent, value, description):
     self.included_in_rent = included_in_rent
@@ -31,5 +37,11 @@ class Property:
     self.number_of_units = number_of_units
     self.amenities = amenities
     self.utilities = utilities
-    self.rents = rents
+    
+    corrected_rents = []
+    for rent in rents:
+      if rent is None:
+        rent = Rent('', '', '')
+      corrected_rents.append(rent)   
+    self.rents = corrected_rents
     

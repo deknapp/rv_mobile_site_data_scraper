@@ -5,29 +5,37 @@ HEADER = ['Property Name', 'Property Address', 'Property City', 'Property State'
 def rent_string(rent_lst):
   cell_lst = []
   for rent in rent_lst:
+    if rent.description is None:
+      rent.description = ''
+    if rent.market is None:
+      rent.market = ''
+    if rent.adjusted is None:
+      rent.adjusted = ''
     strng = rent.description + " " + rent.market + " " + rent.adjusted
     cell_lst.append(strng)
-  return ",".join(cell_lst)
+  return " ".join(cell_lst)
  
 def amen_string(amens):
-  return ",".join(amens)
+  return " ".join(amens)
 
 def util_string(name, util):
-  return name + " " + util.value + " " + description
+  return name + " " + util.value + " " + util.description
 
-def util_strings(utils):
+def utils_string(utils):
+  if not isinstance(utils, rv_property.Utilities):
+    return '' 
   util_list = []
   util_list.append(util_string("Water", utils.water))
   util_list.append(util_string("Sewer", utils.sewer))
   util_list.append(util_string("Trash", utils.trash))
   util_list.append(util_string("Cable", utils.cable))
   util_list.append(util_string("Lawn", utils.cable))
-  return ",".join(amens)
+  return " ".join(util_list)
 
 def write_property(handle, prop):
   line_lst = []
   line_lst.append(prop.name)
-  line_lst.append(prop.adddress)
+  line_lst.append(prop.address)
   line_lst.append(prop.city)
   line_lst.append(prop.state)
   line_lst.append(prop.zip)
@@ -46,7 +54,7 @@ def write_property_csv(csv_name, property_lst):
   handle = open(csv_name, 'w')
   header_line = ' '.join(HEADER)
   handle.write(header_line)
-  for prop in property_list:
+  for prop in property_lst:
     write_property(handle, prop)  
   handle.close()
 

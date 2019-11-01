@@ -61,16 +61,16 @@ def utilities(pg_lst):
   return rv_property.Utilities(water, sewer, trash, cable, lawn)
 
 def property_from_page(pg_lst):
-  name = pg_lst[5]
-  address = pg_lst[6]
 
-  csz_index = 0 
   try:
-    csz_index = index_from_key(pg_lst, 'Community Information') + 3 
+    community_info_index = index_from_key(pg_lst, 'Community Information')
   except:
-    pass
-  
-  city_state_zip = pg_lst[csz_index].split()
+    print("property failed")
+    exit()
+  print("property passed")
+  name = pg_lst[community_info_index + 1]
+  address = pg_lst[community_info_index + 2]
+  city_state_zip = pg_lst[community_info_index + 3].split()
   
   if len(city_state_zip) < 3:
     print("city state zip failed for : " + name)
@@ -82,14 +82,20 @@ def property_from_page(pg_lst):
     state = city_state_zip[1]
     zp = city_state_zip[2]
   
-  phone = pg_lst[8]
-  age_range = pg_lst[10]
+  phone = pg_lst[community_info_index + 4]
+  age_range = pg_lst[community_info_index + 6]
 
   # TODO  
   email = '' 
   ownership = ''
 
-  jlt_notes = pg_lst[15] + pg_lst[16]
+  notes_index = index_from_key(pg_lst, 'Notes')
+  notes = ''
+  i = notes_index + 1
+  while 'Community Amenities' not in pg_lst[i]:
+    notes = notes + pg_lst[i]
+    i += 1
+  jlt_notes = notes 
 
   try:
     number_of_units = val_from_previous(pg_lst, 'Multiple Section', distance=7)
@@ -128,10 +134,13 @@ def property_from_page(pg_lst):
 def property_lst(txt):
   pg_lst = split_text_by_place(txt)
   prop_lst = []
-  #for pg in pg_lst:
-   # prop_lst.append(property_from_page(pg))
+  for pg in pg_lst:
+    try:
+      prop = property_from_page(pg)
+    except:
+      pass
+    prop_lst.append(property_from_page(pg))
   for val in pg_lst[0]:
     print(val)
-  prop_lst.append(property_from_page(pg_lst[0]))
   return prop_lst
 

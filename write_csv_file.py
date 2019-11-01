@@ -1,6 +1,9 @@
 import rv_property
+import os
 
 HEADER = ['Property Name', 'Property Address', 'Property City', 'Property State','Property Zip', 'Phone Number', 'Email', 'All Age / 55+', 'Ownership / Management', 'JLT Notes', 'Number of Units', 'Amenities', 'Utilities (Incl, Val, Des)', 'Rents (mkt, adj)']
+
+DELIMITER = ','
 
 def rent_string(rent_lst):
   cell_lst = []
@@ -15,9 +18,6 @@ def rent_string(rent_lst):
     cell_lst.append(strng)
   return " ".join(cell_lst)
  
-def amen_string(amens):
-  return " ".join(amens)
-
 def util_string(name, util):
   return name + " " + util.value + " " + util.description
 
@@ -44,15 +44,20 @@ def write_property(handle, prop):
   line_lst.append(prop.age_range)
   line_lst.append(prop.ownership)
   line_lst.append(prop.jlt_notes)
-  line_lst.append(amen_string(prop.amenities))
+  line_lst.append(prop.number_of_units)
+  line_lst.append(prop.amenities)
   line_lst.append(utils_string(prop.utilities))
   line_lst.append(rent_string(prop.rents))
-  line = ','.join(line_lst) + '\n'
+  line = DELIMITER.join(line_lst) + '\n'
   handle.write(line)
 
 def write_property_csv(csv_name, property_lst):
+  try:
+    os.system('rm ' + csv_name)
+  except:
+    pass    
   handle = open(csv_name, 'w')
-  header_line = ' '.join(HEADER)
+  header_line = DELIMITER.join(HEADER) + '\n'
   handle.write(header_line)
   for prop in property_lst:
     write_property(handle, prop)  

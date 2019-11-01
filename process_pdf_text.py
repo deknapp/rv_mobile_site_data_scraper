@@ -13,6 +13,8 @@ def split_text_by_place(txt):
       pg_lst.append(current_lst)
       current_lst = []
     current_lst.append(line)  
+  print(pg_lst[0])
+#  exit()
   return pg_lst
 
 def amenities(pg_lst):
@@ -85,13 +87,15 @@ def property_from_page(pg_lst):
   
   phone = pg_lst[8]
   age_range = pg_lst[10]
-  
-  email = pg_lst[0]
-  
-  ownership = pg_lst[0]
+
+  # TODO  
+  email = '' 
+  ownership = ''
+
   jlt_notes = pg_lst[15] + pg_lst[16]
 
-  number_of_units = pg_lst[0]
+  # TODO
+  number_of_units = ''
 
   try:
     amens = amenities(pg_lst)
@@ -123,10 +127,9 @@ def property_from_page(pg_lst):
 
 def property_lst(txt):
   pg_lst = split_text_by_place(txt)
-#  print(pg_lst[0])
-#  exit()
   prop_lst = []
-  for pg in pg_lst:
-    prop_lst.append(property_from_page(pg))
+  #for pg in pg_lst:
+   # prop_lst.append(property_from_page(pg))
+  prop_lst.append(property_from_page(pg_lst[0]))
   return prop_lst
 

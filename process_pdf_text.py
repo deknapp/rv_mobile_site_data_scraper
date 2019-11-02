@@ -2,7 +2,7 @@ import constants
 import pdf_scrape
 import rv_property
 
-nc_test_text = pdf_scrape.convert_pdf_to_txt(constants.NORTH_CAROLINA_PDF, constants.NC_PAGE_NOS)
+nc_test_text = pdf_scrape.convert_pdf_to_txt(constants.NORTH_CAROLINA_PDF)
 
 def split_text_by_place(txt):
   pg_lst = []
@@ -13,7 +13,7 @@ def split_text_by_place(txt):
       pg_lst.append(current_lst)
       current_lst = []
     current_lst.append(line)  
-  return pg_lst
+  return pg_lst[1:]
 
 def amenities(pg_lst):
   lst = []
@@ -28,7 +28,7 @@ def index_from_key(pg_lst, key):
   while key not in val:
     i += 1         
     if i > len(pg_lst) - 1:
-      print("ERROR: key not found: " + key)
+      print("ERROR: key not found: " + key )
     val = pg_lst[i]
   return i
 
@@ -65,10 +65,9 @@ def property_from_page(pg_lst):
   try:
     community_info_index = index_from_key(pg_lst, 'Community Information')
   except:
-    print("property failed")
-    exit()
-  print("property passed")
+    exit() 
   name = pg_lst[community_info_index + 1]
+  print(name)
   address = pg_lst[community_info_index + 2]
   city_state_zip = pg_lst[community_info_index + 3].split()
   
@@ -135,12 +134,13 @@ def property_lst(txt):
   pg_lst = split_text_by_place(txt)
   prop_lst = []
   for pg in pg_lst:
+    print("=====================")
     try:
       prop = property_from_page(pg)
     except:
-      pass
-    prop_lst.append(property_from_page(pg))
-  for val in pg_lst[0]:
-    print(val)
+      continue
+    prop_lst.append(prop)
+    for line in pg:
+      print(line)
   return prop_lst
 

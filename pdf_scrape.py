@@ -7,9 +7,8 @@ from pdfminer.pdfpage import PDFPage
 from io import StringIO
 
 nc_file = constants.NORTH_CAROLINA_PDF
-nc_page_nos = range(17, 29)
 
-def convert_pdf_to_txt(path, page_nos=None):
+def convert_pdf_to_txt(path):
     rsrcmgr = PDFResourceManager()
     retstr = StringIO()
     codec = 'utf-8'
@@ -20,10 +19,7 @@ def convert_pdf_to_txt(path, page_nos=None):
     password = ""
     maxpages = 0
     caching = True
-    pagenos = page_nos
-    if page_nos is not None:
-      pagenos = set(page_nos)
-
+    pagenos = None
     for page in PDFPage.get_pages(fp, pagenos, maxpages=maxpages, password=password,caching=caching, check_extractable=True):
         interpreter.process_page(page)
 

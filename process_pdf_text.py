@@ -91,8 +91,8 @@ def property_from_page(pg_lst):
   for item in pg_lst:
     if '.com' in item:
       email = item
-    if 'Owned By' in item:
-      ownership = item.split()[2]
+    if 'Owned by' in item:
+      ownership = ' '.join(item.split()[2:])
 
   notes = ''
   try:
@@ -102,7 +102,6 @@ def property_from_page(pg_lst):
       notes = notes + pg_lst[i]
       i += 1
   except:
-    print(pg_lst)
     pass
  
   jlt_notes = notes 

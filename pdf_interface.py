@@ -1,4 +1,4 @@
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import tkinter as tk 
 import main_pdf
 
@@ -18,6 +18,9 @@ class PdfScrapeGUI:
 
     self.select_folder_button = tk.Button(parent, text="Select Output Folder", command=self.select_output_folder)
     self.select_folder_button.pack()
+    
+    self.scrape_button = tk.Button(parent, text="Scrape PDFs", command=self.scrape())
+    self.scrape_button.pack()
     
     self.close_button = tk.Button(parent, text="Close", command=parent.quit)
     self.close_button.pack()    

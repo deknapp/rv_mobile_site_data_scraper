@@ -27,8 +27,6 @@ def index_from_key(pg_lst, key, name =''):
   val = pg_lst[0]
   i = 0
   while key not in val and key != val:
-    if key == 'Notes':
-      print(val)  
     i += 1         
     if i > len(pg_lst) - 1:
       print("ERROR: key not found: " + key + name)
@@ -90,13 +88,23 @@ def property_from_page(pg_lst):
   # TODO  
   email = '' 
   ownership = ''
+  for item in pg_lst:
+    if '.com' in item:
+      email = item
+    if 'Owned By' in item:
+      ownership = item.split()[2]
 
-  notes_index = index_from_key(pg_lst, 'Notes', name=name)
   notes = ''
-  i = notes_index + 1
-  while 'Community Amenities' not in pg_lst[i]:
-    notes = notes + pg_lst[i]
-    i += 1
+  try:
+    notes_index = index_from_key(pg_lst, 'Notes', name=name)
+    i = notes_index + 1
+    while 'Community Amenities' not in pg_lst[i]:
+      notes = notes + pg_lst[i]
+      i += 1
+  except:
+    print(pg_lst)
+    pass
+ 
   jlt_notes = notes 
 
   try:

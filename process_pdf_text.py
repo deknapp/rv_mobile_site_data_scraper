@@ -13,6 +13,7 @@ def split_text_by_place(txt):
       pg_lst.append(current_lst)
       current_lst = []
     current_lst.append(line)  
+  pg_lst.append(current_lst)
   return pg_lst[1:]
 
 def amenities(pg_lst):
@@ -22,13 +23,15 @@ def amenities(pg_lst):
       lst.append(amen)
   return ' '.join(lst) 
 
-def index_from_key(pg_lst, key):
+def index_from_key(pg_lst, key, name =''):
   val = pg_lst[0]
   i = 0
-  while key not in val:
+  while key not in val and key != val:
+    if key == 'Notes':
+      print(val)  
     i += 1         
     if i > len(pg_lst) - 1:
-      print("ERROR: key not found: " + key )
+      print("ERROR: key not found: " + key + name)
     val = pg_lst[i]
   return i
 
@@ -88,7 +91,7 @@ def property_from_page(pg_lst):
   email = '' 
   ownership = ''
 
-  notes_index = index_from_key(pg_lst, 'Notes')
+  notes_index = index_from_key(pg_lst, 'Notes', name=name)
   notes = ''
   i = notes_index + 1
   while 'Community Amenities' not in pg_lst[i]:
@@ -127,20 +130,22 @@ def property_from_page(pg_lst):
 
   # TODO: make this work for rents more generally 
   rents = [rv_property.Rent(market_rent, adjusted_rent, '')] 
- 
-  return rv_property.Property(name, address, city, state, zp, phone, email, age_range, ownership, jlt_notes, number_of_units, amens, utils, rents)
 
+  try: 
+    prop = rv_property.Property(name, address, city, state, zp, phone, email, age_range, ownership, jlt_notes, number_of_units, amens, utils, rents)
+  except:
+    print("prop constructor failed")
+    exit()
+  return prop
+  
 def property_lst(txt):
   pg_lst = split_text_by_place(txt)
   prop_lst = []
   for pg in pg_lst:
-    print("=====================")
     try:
       prop = property_from_page(pg)
+      prop_lst.append(prop)
     except:
       continue
-    prop_lst.append(prop)
-    for line in pg:
-      print(line)
   return prop_lst
 

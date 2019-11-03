@@ -5,4 +5,4 @@ NC_PAGE_NOS = range(17, 29)
 
 COLUMBIA_PDF = BASE + 'Columbia.pdf'
 
-PG_SEP = 'Market Report'
+PG_SEP = 'Community Information'

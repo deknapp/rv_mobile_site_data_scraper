@@ -9,5 +9,6 @@ def scrape_pdf(pdf_name, output_csv):
   prop_lst = process_pdf_text.property_lst(txt)
   write_csv_file.write_property_csv(output_csv, prop_lst)
 
-scrape_pdf(constants.NORTH_CAROLINA_PDF, '/Users/nknapp/Desktop/Scraping_Contract_Upwork/nc_test.csv') 
+# for testing
+#scrape_pdf(constants.NORTH_CAROLINA_PDF, '/Users/nknapp/Desktop/Scraping_Contract_Upwork/nc_test.csv') 
   

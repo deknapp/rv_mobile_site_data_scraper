@@ -13,34 +13,40 @@ class PdfScrapeGUI:
     self.output_folder = None
     parent.title("Scrape Market Report PDF")
 
-    self.select_file_button = tk.Button(parent, text="Select PDF File(s) To Scrape", command=self.select_input_files)
+    self.select_file_button = tk.Button(parent, text="Select PDF File(s) To Scrape", command=lambda: self.select_input_files())
     self.select_file_button.pack()
 
-    self.select_folder_button = tk.Button(parent, text="Select Output Folder", command=self.select_output_folder)
+    self.select_folder_button = tk.Button(parent, text="Select Output Folder", command=lambda: self.select_output_folder())
     self.select_folder_button.pack()
     
-    self.scrape_button = tk.Button(parent, text="Scrape PDFs", command=self.scrape())
+    self.scrape_button = tk.Button(parent, text="Scrape PDFs", command=lambda: self.scrape())
     self.scrape_button.pack()
     
-    self.close_button = tk.Button(parent, text="Close", command=parent.quit)
+    self.close_button = tk.Button(parent, text="Close", command= parent.quit)
     self.close_button.pack()    
 
   def select_input_files(self):
-    root = tk.Tk()
-    filez = filedialog.askopenfilenames(parent=root,title=FILE_MSG)
+    filez = filedialog.askopenfilenames(title=FILE_MSG)
     self.file_list = root.tk.splitlist(filez)
   
   def select_output_folder(self):
-    root = tk.Tk()
-    self.output_folder = filedialog.askdirectory(parent=root,title=CSV_FILE_FOLDER)
+    self.output_folder = filedialog.askdirectory(title=CSV_FILE_FOLDER)
   
   def scrape(self):
+    print("starting to scrape")
+
     if self.output_folder is None:
+      print("ERROR: no output folder")
       messagebox.showinfo("Error", "You must select an output folder")        
       return
 
     if self.file_list is None:
+      print("ERROR: file list is None")
       messagebox.showinfo("Error", "You must select input PDF file(s)")        
+      return
+
+    if len(self.file_list) == 0:
+      print("ERROR: no files in file list")
       return
 
     for fle in self.file_list:
@@ -49,6 +55,8 @@ class PdfScrapeGUI:
       main_pdf.scrape_pdf(fle, output_file_name)
     except:
       pass
+    
+    print("done scraping")
 
 if __name__ == "__main__":  
   root = tk.Tk()

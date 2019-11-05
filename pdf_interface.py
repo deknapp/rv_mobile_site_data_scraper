@@ -50,7 +50,7 @@ class PdfScrapeGUI:
       return
 
     for fle in self.file_list:
-      output_file_name = self.output_folder + '/' + fle.split('.pdf')[0] + '.csv'
+      output_file_name = self.output_folder + '/' + (fle.split('/')[-1]).split('.pdf')[0] + '.csv'
     try:
       main_pdf.scrape_pdf(fle, output_file_name)
     except:

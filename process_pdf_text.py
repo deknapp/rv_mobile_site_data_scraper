@@ -2,8 +2,6 @@ import constants
 import pdf_scrape
 import rv_property
 
-nc_test_text = pdf_scrape.convert_pdf_to_txt(constants.NORTH_CAROLINA_PDF)
-
 def split_text_by_place(txt):
   pg_lst = []
   lines = txt.splitlines()

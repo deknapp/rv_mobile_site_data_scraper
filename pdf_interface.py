@@ -8,22 +8,23 @@ CSV_FILE_FOLDER = 'Choose a folder for output files to be stored'
 class PdfScrapeGUI:
 
   def __init__(self, parent):
+    parent.geometry("500x500")
     self.parent = parent
     self.file_list = None
     self.output_folder = None
     parent.title("Scrape Market Report PDF")
 
     self.select_file_button = tk.Button(parent, text="Select PDF File(s) To Scrape", command=lambda: self.select_input_files())
-    self.select_file_button.pack()
+    self.select_file_button.grid(row=0, column=3, padx=20, pady=20)
 
     self.select_folder_button = tk.Button(parent, text="Select Output Folder", command=lambda: self.select_output_folder())
-    self.select_folder_button.pack()
+    self.select_folder_button.grid(row=1, column=3, padx=20, pady=20)
     
     self.scrape_button = tk.Button(parent, text="Scrape PDFs", command=lambda: self.scrape())
-    self.scrape_button.pack()
+    self.scrape_button.grid(row=2, column=3, padx=20, pady=20)
     
     self.close_button = tk.Button(parent, text="Close", command= parent.quit)
-    self.close_button.pack()    
+    self.close_button.grid(row=3, column=3, padx=20, pady=20)    
 
   def select_input_files(self):
     filez = filedialog.askopenfilenames(title=FILE_MSG)

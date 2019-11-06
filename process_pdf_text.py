@@ -47,8 +47,26 @@ def yn_to_bool(val):
   else:
     print("ERROR: invalid Yes/No")
 
-def util_from_index(pg_lst, base_i):
-  return rv_property.Utility(pg_lst[base_i], pg_lst[base_i+8], pg_lst[base_i+16])
+def pg_substring(pg_lst, start, end):
+  lst_str = ' '.join(pg_lst)
+  print(lst_str)
+  right_side = lst_str.split(start)[1]
+  print(right_side)
+  return right_side.split(end)[0]
+
+def get_description(pg_lst, valA):
+  substring = pg_substring(pg_lst, 'Description', 'Site Type')  
+  print(substring)
+  right = substring.split(valA)[1] 
+  print(right)
+  return right.split()[0]
+
+def util_from_index(pg_lst, base_i, water=False):
+  included_in_rent = pg_lst[base_i+8]
+  val = pg_lst[base_i+16]
+  descr = pg_lst[base_i+17]
+  return rv_property.Utility(included_in_rent, val, descr)
+
 
 def utilities(pg_lst): 
   base_index = index_from_key(pg_lst, 'Service')
@@ -67,6 +85,7 @@ def property_from_page(pg_lst):
     exit() 
   name = pg_lst[community_info_index + 1]
   print(name)
+  
   address = pg_lst[community_info_index + 2]
   city_state_zip = pg_lst[community_info_index + 3].split()
   
@@ -86,11 +105,19 @@ def property_from_page(pg_lst):
   # TODO  
   email = '' 
   ownership = ''
+  management = ''
   for item in pg_lst:
     if '.com' in item:
       email = item
     if 'Owned by' in item:
       ownership = ' '.join(item.split()[2:])
+    if 'Managed by' in item:
+      management = ' '.join(item.split()[2:])
+  
+  if ownership == '' and management == '':
+    ownership = ''
+  else:
+    ownership = ownership + ' / ' + management    
 
   notes = ''
   try:
@@ -105,7 +132,7 @@ def property_from_page(pg_lst):
   jlt_notes = notes 
 
   try:
-    number_of_units = val_from_previous(pg_lst, 'Multiple Section', distance=7)
+    number_of_units = val_from_previous(pg_lst, 'Multiple Section', distance=5)
   except:
     number_of_units = ''
     print("number of units failed for " + name)
@@ -141,11 +168,15 @@ def property_from_page(pg_lst):
   except:
     print("prop constructor failed")
     exit()
+  
+  if 'Maples' in name:
+    for itm in pg_lst:
+      print(itm)
   return prop
   
 def property_lst(txt):
-  pg_lst = split_text_by_place(txt)
   prop_lst = []
+  pg_lst = split_text_by_place(txt)
   for pg in pg_lst:
     try:
       prop = property_from_page(pg)

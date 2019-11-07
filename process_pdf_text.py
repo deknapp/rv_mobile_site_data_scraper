@@ -28,6 +28,7 @@ def index_from_key(pg_lst, key, name =''):
     i += 1         
     if i > len(pg_lst) - 1:
       print("ERROR: key not found: " + key + name)
+      return -1
     val = pg_lst[i]
   return i
 
@@ -47,30 +48,84 @@ def yn_to_bool(val):
   else:
     print("ERROR: invalid Yes/No")
 
-def pg_substring(pg_lst, start, end):
-  lst_str = ' '.join(pg_lst)
-  right_side = lst_str.split(start)[1]
-  return right_side.split(end)[0]
-
-def get_descriptions(pg_lst):
-  substring = pg_substring(pg_lst, 'Description', 'Site Type')  
-  chunks = substring.split('$') 
-  return [chunk.strip("$123456789") for chunk in chunks[1:]] 
-
-def util_from_index(pg_lst, base_i, descr):
+def process_val(val):
+  if len(val.split()) > 1:
+    return val.split()[0]
+  return val
+ 
+def util_from_index(pg_lst, base_i):
   included_in_rent = pg_lst[base_i+8]
-  val = pg_lst[base_i+16]
-  return rv_property.Utility(included_in_rent, val, descr)
+  return rv_property.Utility(included_in_rent, '', '')
+
+def add_util_value(pg_lst, utils):
+  vals = get_util_values(pg_lst)
+  print(vals)
+  i = 0  
+  if i+1 > len(vals):
+    return utils
+  if 'Yes' in utils.water.included_in_rent:
+    utils.water.value = vals[i]
+    i = i + 1   
+  if i+1 > len(vals):
+    return utils
+  if 'Yes' in utils.sewer.included_in_rent:
+    utils.sewer.value = vals[i]
+    i = i + 1   
+  if i+1 > len(vals):
+    return utils
+  if 'Yes' in utils.trash.included_in_rent:
+    utils.trash.value = vals[i]
+    i = i + 1   
+  if i+1 > len(vals):
+    return utils
+  if 'Yes' in utils.cable.included_in_rent:
+    utils.cable.value = vals[i]
+    i = i + 1   
+  if i+1 > len(vals):
+    return utils
+  if 'Yes' in utils.lawn.included_in_rent:
+    utils.lawn.value = vals[i]
+  return utils
+
+def get_between(pg_lst, start, end):
+  if start == '' or end == '':
+    return ''
+  start_i = index_from_key(pg_lst, start) 
+  end_i = index_from_key(pg_lst, end) 
+  if start_i == -1 or end_i == -1:
+    return ''
+  between = ''
+  for i in range(start_i+1, end_i):
+    between = between + pg_lst[i]
+  return between
+
+def get_util_values(pg_lst):
+  between = get_between(pg_lst, 'Description', 'Site Type')
+  if '$' not in between:
+    return []
+  dollar_split_between = between.split('$')
+  vals = [itm.split()[0] for itm in dollar_split_between[1:]]
+  return [''.join(c for c in item if c.isdigit()) for item in vals] 
+ 
+def add_util_descr(pg_lst, utils):
+  utils.water.description = get_between(water.value, sewer.value)
+  utils.sewer.description = get_between(sewer.value, trash.value)
+  utils.trash.description = get_between(trash.value, cable.value)
+  utils.cable.description = get_between(cable.value, lawn.value)
+  utils.lawn.description = get_between(lawn.value, 'Amenities')
+  return utils     
 
 def utilities(pg_lst): 
   base_index = index_from_key(pg_lst, 'Service')
-  descriptions = get_descriptions(pg_lst) 
-  water = util_from_index(pg_lst, base_index+1, descriptions[0])
-  sewer = util_from_index(pg_lst, base_index+2, descriptions[1])
-  trash = util_from_index(pg_lst, base_index+3, descriptions[2])
-  cable = util_from_index(pg_lst, base_index+4, descriptions[3])
-  lawn = util_from_index(pg_lst, base_index+5, descriptions[4])
-  return rv_property.Utilities(water, sewer, trash, cable, lawn)
+  water = util_from_index(pg_lst, base_index+1)
+  sewer = util_from_index(pg_lst, base_index+2)
+  trash = util_from_index(pg_lst, base_index+3)
+  cable = util_from_index(pg_lst, base_index+4)
+  lawn = util_from_index(pg_lst, base_index+5)
+  utils = rv_property.Utilities(water, sewer, trash, cable, lawn)
+  utils = add_util_value(pg_lst, utils)
+  #utils = add_util_descr(pg_lst, utils)
+  return utils
 
 def property_from_page(pg_lst):
 

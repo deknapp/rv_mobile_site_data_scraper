@@ -49,32 +49,27 @@ def yn_to_bool(val):
 
 def pg_substring(pg_lst, start, end):
   lst_str = ' '.join(pg_lst)
-  print(lst_str)
   right_side = lst_str.split(start)[1]
-  print(right_side)
   return right_side.split(end)[0]
 
-def get_description(pg_lst, valA):
+def get_descriptions(pg_lst):
   substring = pg_substring(pg_lst, 'Description', 'Site Type')  
-  print(substring)
-  right = substring.split(valA)[1] 
-  print(right)
-  return right.split()[0]
+  chunks = substring.split('$') 
+  return [chunk.strip("$123456789") for chunk in chunks[1:]] 
 
-def util_from_index(pg_lst, base_i, water=False):
+def util_from_index(pg_lst, base_i, descr):
   included_in_rent = pg_lst[base_i+8]
   val = pg_lst[base_i+16]
-  descr = pg_lst[base_i+17]
   return rv_property.Utility(included_in_rent, val, descr)
-
 
 def utilities(pg_lst): 
   base_index = index_from_key(pg_lst, 'Service')
-  water = util_from_index(pg_lst, base_index+1)
-  sewer = util_from_index(pg_lst, base_index+2)
-  trash = util_from_index(pg_lst, base_index+3)
-  cable = util_from_index(pg_lst, base_index+4)
-  lawn = util_from_index(pg_lst, base_index+5)
+  descriptions = get_descriptions(pg_lst) 
+  water = util_from_index(pg_lst, base_index+1, descriptions[0])
+  sewer = util_from_index(pg_lst, base_index+2, descriptions[1])
+  trash = util_from_index(pg_lst, base_index+3, descriptions[2])
+  cable = util_from_index(pg_lst, base_index+4, descriptions[3])
+  lawn = util_from_index(pg_lst, base_index+5, descriptions[4])
   return rv_property.Utilities(water, sewer, trash, cable, lawn)
 
 def property_from_page(pg_lst):

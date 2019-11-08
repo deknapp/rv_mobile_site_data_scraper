@@ -109,7 +109,6 @@ def get_util_descr(pg_lst):
 
 def add_util_descr(pg_lst, utils):
   vals = get_util_descr(pg_lst)
-  print(vals)
   if len(vals) > 0: 
     utils.water.description = vals[0]
   if len(vals) > 1: 

@@ -59,7 +59,6 @@ def util_from_index(pg_lst, base_i):
 
 def add_util_value(pg_lst, utils):
   vals = get_util_values(pg_lst)
-  print(vals)
   i = 0  
   if i+1 > len(vals):
     return utils
@@ -87,6 +86,25 @@ def add_util_value(pg_lst, utils):
     utils.lawn.value = vals[i]
   return utils
 
+def get_util_descr(pg_lst):
+  descrs = []
+  for itm in pg_lst:
+    for d in constants.UTIL_DESCRS:
+      if d in itm:
+        descrs.append(d)
+  return descrs            
+
+def add_util_descr(pg_lst, utils):
+  vals = get_util_descr(pg_lst)
+  print(vals)
+  if len(vals) > 0: 
+    utils.water.description = vals[0]
+  if len(vals) > 1: 
+    utils.sewer.description = vals[1]
+  if len(vals) > 2: 
+    utils.trash.description = vals[2]
+  return utils
+
 def get_between(pg_lst, start, end):
   if start == '' or end == '':
     return ''
@@ -106,14 +124,6 @@ def get_util_values(pg_lst):
   dollar_split_between = between.split('$')
   vals = [itm.split()[0] for itm in dollar_split_between[1:]]
   return [''.join(c for c in item if c.isdigit()) for item in vals] 
- 
-def add_util_descr(pg_lst, utils):
-  utils.water.description = get_between(water.value, sewer.value)
-  utils.sewer.description = get_between(sewer.value, trash.value)
-  utils.trash.description = get_between(trash.value, cable.value)
-  utils.cable.description = get_between(cable.value, lawn.value)
-  utils.lawn.description = get_between(lawn.value, 'Amenities')
-  return utils     
 
 def utilities(pg_lst): 
   base_index = index_from_key(pg_lst, 'Service')
@@ -124,11 +134,10 @@ def utilities(pg_lst):
   lawn = util_from_index(pg_lst, base_index+5)
   utils = rv_property.Utilities(water, sewer, trash, cable, lawn)
   utils = add_util_value(pg_lst, utils)
-  #utils = add_util_descr(pg_lst, utils)
+  utils = add_util_descr(pg_lst, utils)
   return utils
 
 def property_from_page(pg_lst):
-
   try:
     community_info_index = index_from_key(pg_lst, 'Community Information')
   except:

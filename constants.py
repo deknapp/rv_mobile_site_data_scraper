@@ -6,3 +6,5 @@ NC_PAGE_NOS = range(17, 29)
 COLUMBIA_PDF = BASE + 'Columbia.pdf'
 
 PG_SEP = 'Community Information'
+
+UTIL_DESCRS = ['STP', 'Well', 'City', 'Curbside', 'Dumpster']

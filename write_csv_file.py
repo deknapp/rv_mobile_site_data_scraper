@@ -19,7 +19,7 @@ def rent_string(rent_lst):
   return " ".join(cell_lst)
  
 def util_string(name, util):
-  return name + " " + util.included_in_rent + " " + util.value + " " + util.description
+  return name + " " + util.included_in_rent + " " + util.value + " " + util.description + ";"
 
 def utils_string(utils):
   if not isinstance(utils, rv_property.Utilities):
@@ -30,7 +30,7 @@ def utils_string(utils):
   util_list.append(util_string("Trash", utils.trash))
   util_list.append(util_string("Cable", utils.cable))
   util_list.append(util_string("Lawn", utils.cable))
-  return " ".join(util_list)
+  return "".join(util_list)
 
 def clean_commas(prop):
   return prop.replace(',', '   ')

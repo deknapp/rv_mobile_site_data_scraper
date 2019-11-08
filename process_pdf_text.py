@@ -117,6 +117,15 @@ def get_between(pg_lst, start, end):
     between = between + pg_lst[i]
   return between
 
+def get_notes(pg_lst):
+  notes = []
+  for itm in pg_lst: 
+    for key in constants.NOTES_KEYS:
+      if key in itm:
+        notes.append(itm)
+        break
+  return " ".join(notes)
+
 def get_util_values(pg_lst):
   between = get_between(pg_lst, 'Description', 'Site Type')
   if '$' not in between:
@@ -178,17 +187,7 @@ def property_from_page(pg_lst):
   else:
     ownership = ownership + ' / ' + management    
 
-  notes = ''
-  try:
-    notes_index = index_from_key(pg_lst, 'Notes', name=name)
-    i = notes_index + 1
-    while 'Community Amenities' not in pg_lst[i]:
-      notes = notes + pg_lst[i]
-      i += 1
-  except:
-    pass
- 
-  jlt_notes = notes 
+  jlt_notes = get_notes(pg_lst) 
 
   try:
     number_of_units = val_from_previous(pg_lst, 'Multiple Section', distance=5)
@@ -228,7 +227,7 @@ def property_from_page(pg_lst):
     print("prop constructor failed")
     exit()
   
-  if 'Maples' in name:
+  if 'Meadowbrook' in name:
     for itm in pg_lst:
       print(itm)
   return prop

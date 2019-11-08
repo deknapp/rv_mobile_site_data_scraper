@@ -1,5 +1,7 @@
 BASE = '/Users/nknapp/Desktop/Scraping_Contract_Upwork/'
 
+MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
 NORTH_CAROLINA_PDF = BASE + 'North_Carolina.pdf'
 NC_PAGE_NOS = range(17, 29)
 

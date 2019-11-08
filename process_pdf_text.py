@@ -2,6 +2,16 @@ import constants
 import pdf_scrape
 import rv_property
 
+def get_date(pg_lst):
+  for line in pg_lst:
+    i = 0
+    for m in constants.MONTHS:
+      i = i+1
+      if m in line:
+        for y in [str(i) for i in range(2000, 2050)]:
+          if y in line:
+            return str(i) + '/' + y 
+
 def split_text_by_place(txt):
   pg_lst = []
   lines = txt.splitlines()
@@ -146,6 +156,13 @@ def utilities(pg_lst):
   utils = add_util_descr(pg_lst, utils)
   return utils
 
+def get_age_range(pg_lst):
+  for itm in pg_lst:
+    if 'All Ages' in itm:
+      return 'All Ages Community'
+    if '55+' in itm:
+      return '55+ Community'
+
 def property_from_page(pg_lst):
   try:
     community_info_index = index_from_key(pg_lst, 'Community Information')
@@ -168,14 +185,14 @@ def property_from_page(pg_lst):
     zp = city_state_zip[2]
   
   phone = pg_lst[community_info_index + 4]
-  age_range = pg_lst[community_info_index + 6]
+  age_range = get_age_range(pg_lst) 
 
   # TODO  
   email = '' 
   ownership = ''
   management = ''
   for item in pg_lst:
-    if '.com' in item:
+    if '.com' in item or '@' in item or '.net' in item:
       email = item
     if 'Owned by' in item:
       ownership = ' '.join(item.split()[2:])
@@ -187,7 +204,8 @@ def property_from_page(pg_lst):
   else:
     ownership = ownership + ' / ' + management    
 
-  jlt_notes = get_notes(pg_lst) 
+  date = get_date(pg_lst)
+  jlt_notes = date + ' - ' + get_notes(pg_lst) 
 
   try:
     number_of_units = val_from_previous(pg_lst, 'Multiple Section', distance=5)

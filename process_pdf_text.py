@@ -12,6 +12,9 @@ def get_date(pg_lst):
           if y in line:
             return str(i) + '/' + y 
 
+def get_date_from_txt(txt):
+  return get_date(txt.splitlines())
+
 def split_text_by_place(txt):
   pg_lst = []
   lines = txt.splitlines()
@@ -163,7 +166,7 @@ def get_age_range(pg_lst):
     if '55+' in itm:
       return '55+ Community'
 
-def property_from_page(pg_lst):
+def property_from_page(pg_lst, date):
   try:
     community_info_index = index_from_key(pg_lst, 'Community Information')
   except:
@@ -204,11 +207,10 @@ def property_from_page(pg_lst):
   else:
     ownership = ownership + ' / ' + management    
 
-  date = get_date(pg_lst)
   jlt_notes = date + ' - ' + get_notes(pg_lst) 
 
   try:
-    number_of_units = val_from_previous(pg_lst, 'Multiple Section', distance=5)
+    number_of_units = val_from_previous(pg_lst, 'Multiple Section', distance=2)
   except:
     number_of_units = ''
     print("number of units failed for " + name)
@@ -245,17 +247,15 @@ def property_from_page(pg_lst):
     print("prop constructor failed")
     exit()
   
-  if 'Meadowbrook' in name:
-    for itm in pg_lst:
-      print(itm)
   return prop
   
 def property_lst(txt):
   prop_lst = []
   pg_lst = split_text_by_place(txt)
+  date = get_date_from_txt(txt)
   for pg in pg_lst:
     try:
-      prop = property_from_page(pg)
+      prop = property_from_page(pg, date)
       prop_lst.append(prop)
     except:
       continue
